@@ -1,5 +1,5 @@
 name = "Types-HasTypedMethods"
-# badges = ["travis-ci.com"]
+badges = ["github-actions/test", "coveralls", "metacpan"]
 authority="cpan:MPOLIIU"
 
 module_maker="ModuleBuildTiny"

@@ -52,6 +52,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ybrliiu/p5-Types-HasTypedMethods/issues"
+      },
+      "homepage" : "https://github.com/ybrliiu/p5-Types-HasTypedMethods",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/ybrliiu/p5-Types-HasTypedMethods.git",
+         "web" : "https://github.com/ybrliiu/p5-Types-HasTypedMethods"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:MPOLIIU",
    "x_serialization_backend" : "JSON::PP version 4.04",
