@@ -123,14 +123,12 @@ sub _build_constraint {
 }
 
 sub validate_explain {
-  ...
 }
 
 push @Type::Tiny::CMP, sub {
   my ($A, $B) = map { $_->find_constraining_type } @_;
   return Type::Tiny::CMP_UNKNOWN unless $A->isa(__PACKAGE__) && $B->isa(__PACKAGE__);
 
-  ...
 };
 
 1;

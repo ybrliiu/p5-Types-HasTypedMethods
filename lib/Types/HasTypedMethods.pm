@@ -20,7 +20,9 @@ $meta->add_type(+{
     my %method_types = @_;
     Type::Tiny::TypedDuck->new(
       method_types => \%method_types,
-      display_name => '{' . join(', ', map { "$_ => $method_types{$_}" } keys %method_types) . '}',
+      display_name => do {
+        '{' . join(',', map { "$_ => $method_types{$_}" } keys %method_types) . '}'
+      },
     );
   },
 });
