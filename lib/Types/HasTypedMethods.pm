@@ -10,6 +10,24 @@ use Type::Library -base;
 use Types::Standard qw( Object );
 use Type::Tiny::TypedDuck;
 
+sub _method_type_to_name {
+  my $method_type = shift;
+  my ($params_types, $returns_types) =
+    ref $method_type eq 'ARRAY' ? @$method_type : @$method_type{qw( params isa )};
+
+  my $params_types_name =
+      ref $params_types eq 'HASH' ? '{' . join( ',', map { "$_ => $params_types->{$_}" } sort keys %$params_types ) . '}'
+    : ref $params_types eq 'ARRAY' ? '[' . join( ',', @$params_types ) . ']'
+    : $params_types;
+  my $returns_types_name = ref $returns_types eq 'ARRAY'
+    ? '[' . join( ',', @$returns_types ) . ']'
+    : $returns_types;
+
+  ref $method_type eq 'ARRAY'
+    ? "[$params_types_name => $returns_types]"
+    : "{params => $params_types_name, isa => $returns_types_name}";
+}
+
 my $meta = __PACKAGE__->meta;
 $meta->add_type(+{
   name                 => 'HasTypedMethods',
@@ -21,7 +39,10 @@ $meta->add_type(+{
     Type::Tiny::TypedDuck->new(
       method_types => \%method_types,
       display_name => do {
-        '{' . join(',', map { "$_ => $method_types{$_}" } keys %method_types) . '}'
+        my $method_type = $method_types{$_};
+        my @method_type_names =
+          map { $_ . ' => ' . _method_type_to_name($method_types{$_}) } sort keys %method_types;
+        '{' . join(',', @method_type_names) . '}';
       },
     );
   },

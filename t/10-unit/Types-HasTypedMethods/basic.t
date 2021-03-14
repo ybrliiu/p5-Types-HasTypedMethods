@@ -9,11 +9,14 @@ use Types::HasTypedMethods -types;
 
 {
   package HasNotTypedMethodsClass;
+
   sub new { bless +{}, shift }
+
   sub add {
     my $class = shift;
     $_[0] + $_[1]
   }
+
   sub do_something {
     my $class = shift;
     $_[0] - $_[1];
@@ -24,17 +27,31 @@ use Types::HasTypedMethods -types;
   package MissingMethodsClass;
   use Types::Standard -types;
   use Sub::WrapInType qw( install_method );
+
   sub new { bless +{}, shift }
-  install_method add => [Int, Int] => Int, sub { $_[0] + $_[1] };
+
+  install_method add => [Int, Int] => Int, sub {
+    my $class = shift;
+    $_[0] + $_[1];
+  };
 }
 
 {
   package HasMethodsClass;
   use Types::Standard -types;
   use Sub::WrapInType qw( install_method );
+
   sub new { bless +{}, shift }
-  install_method add => [Int, Int] => Int, sub { $_[0] + $_[1] };
-  install_method do_something => [Int, Int] => Int, sub { $_[0] - $_[1] };
+
+  install_method add => [Int, Int] => Int, sub {
+    my $class = shift;
+    $_[0] + $_[1];
+  };
+
+  install_method do_something => [Int, Int] => Int, sub {
+    my $class = shift;
+    $_[0] - $_[1];
+  };
 }
 
 my $type = HasTypedMethods[
@@ -44,7 +61,7 @@ my $type = HasTypedMethods[
     isa    => Int,
   },
 ];
-diag $type;
+is $type, '{add => [[Int,Int] => Int],do_something => {params => [Int,Int], isa => Int}}';
 
 ok !$type->check(NoMethodsClass->new);
 ok !$type->check(HasNotTypedMethodsClass->new);
