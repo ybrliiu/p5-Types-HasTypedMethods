@@ -1,11 +1,10 @@
 package Types::HasTypedMethods;
-use 5.008001;
+use 5.010001;
 use strict;
 use warnings;
+use utf8;
 
-our $VERSION = "0.01";
-
-
+our $VERSION = '0.01';
 
 1;
 __END__
@@ -33,7 +32,7 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-ybrliiu E<lt>raian@reeshome.orgE<gt>
+mpoliiu E<lt>raian@reeshome.orgE<gt>
 
 =cut
 
