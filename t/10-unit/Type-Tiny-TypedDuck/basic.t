@@ -2,11 +2,13 @@ use Test2::V0;
 use Types::Standard -types;
 use Type::Tiny::TypedDuck;
 
-package NoMethodsClass {
+{
+  package NoMethodsClass;
   sub new { bless +{}, shift }
 }
 
-package HasNotTypedMethodsClass {
+{
+  package HasNotTypedMethodsClass;
   sub new { bless +{}, shift }
   sub add {
     my $class = shift;
@@ -18,14 +20,16 @@ package HasNotTypedMethodsClass {
   }
 }
 
-package MissingMethodsClass {
+{
+  package MissingMethodsClass;
   use Types::Standard -types;
   use Sub::WrapInType qw( install_method );
   sub new { bless +{}, shift }
   install_method add => [Int, Int] => Int, sub { $_[0] + $_[1] };
 }
 
-package HasMethodsClass {
+{
+  package HasMethodsClass;
   use Types::Standard -types;
   use Sub::WrapInType qw( install_method );
   sub new { bless +{}, shift }
