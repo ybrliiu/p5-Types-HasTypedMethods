@@ -3,7 +3,7 @@ requires 'Sub::Meta', '0.07';
 requires 'List::Util';
 requires 'Scalar::Util';
 requires 'Type::Tiny', '1.010004';
-requires 'Sub::WrapInType', '0.06';
+requires 'Sub::WrapInType', '0.07';
 requires 'Types::TypedCodeRef', '0.07';
 requires 'namespace::autoclean', '0.29';
 

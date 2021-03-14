@@ -8,8 +8,10 @@ use parent 'Type::Tiny';
 use Sub::Meta;
 use List::Util qw( all );
 use Scalar::Util qw( blessed );
+use Sub::WrapInType qw( install_sub );
 use Types::Standard -types;
 use Types::TypedCodeRef -types;
+use Types::TypedCodeRef::Factory;
 use namespace::autoclean;
 
 sub _croak ($;@) {
@@ -21,7 +23,11 @@ my $TypeConstraint = HasMethods[qw( check get_message )];
 my $ParamsTypes    = $TypeConstraint | ArrayRef[$TypeConstraint] | HashRef[$TypeConstraint];
 my $ReturnTypes    = $TypeConstraint | ArrayRef[$TypeConstraint];
 my $TypedMethods   = Tuple[$ParamsTypes, $ReturnTypes] | Dict[ params => $ParamsTypes, isa => $ReturnTypes ];
-my $SubMetaFinder  = ArrayRef[ TypedCodeRef[ CodeRef ,=> Maybe[ InstanceOf['Sub::Meta'] ] ] ];
+my $Callable       = Type::Tiny->new(
+  name       => 'Callable',
+  constraint => \&Types::TypedCodeRef::Factory::_is_callable,
+);
+my $SubMetaFinders = ArrayRef[ TypedCodeRef[ $Callable => Maybe[ InstanceOf['Sub::Meta'] ] ] ];
 
 sub new {
   my $class = shift;
@@ -32,13 +38,10 @@ sub new {
     _croak($error);
   }
 
-  $opts->{sub_meta_finders} //= $class->_build_sub_meta_finders();
-  if ( my $error = $SubMetaFinder->validate($opts->{sub_meta_finders}) ) {
-    _croak($error);
-  }
+  $opts->{sub_meta_finders} = $class->build_sub_meta_finders($opts->{sub_meta_finders});
 
   my $method_types = delete $opts->{method_types};
-  $opts->{method_metas} = map {
+  my %method_metas = map {
     my $method_type = $method_types->{$_};
     my $meta = do {
       if (ref $method_type eq 'ARRAY') {
@@ -58,6 +61,7 @@ sub new {
     };
     ( $_ => $meta );
   } keys %$method_types;
+  $opts->{method_metas} = \%method_metas;
 
   $class->SUPER::new(%$opts);
 }
@@ -66,29 +70,30 @@ sub method_metas { $_[0]{method_metas} }
 
 sub sub_meta_finders { $_[0]{sub_meta_finders} }
 
-sub _build_sub_meta_finders { [\&get_sub_meta_from_sub_wrap_in_type] }
+sub build_sub_meta_finders {
+  my ($self, $sub_meta_finders) = @_;
+  $sub_meta_finders //= $self->_default_sub_meta_finders;
+
+  my $error = $SubMetaFinders->validate($sub_meta_finders);
+  return $sub_meta_finders unless defined $error;
+
+  my $coerced = $SubMetaFinders->coerce($sub_meta_finders);
+  return $coerced if $SubMetaFinders->check($coerced);
+
+  _croak($error);
+}
+
+sub _default_sub_meta_finders { [\&Types::TypedCodeRef::get_sub_meta_from_sub_wrap_in_type] }
 
 sub has_inlined { !!0 }
 
 sub _is_null_constraint { !!0 }
 
-sub get_sub_meta_from_sub_wrap_in_type {
-  my $method = shift;
-  if ( blessed($method) && $method->isa('Sub::WrapInType') ) {
-    return Sub::Meta->new(
-      args      => $method->params,
-      returns   => $method->returns,
-      is_method => $method->is_method,
-    );
-  }
-  return;
-}
-
 sub find_sub_meta {
   my ($self, $method) = @_;
-  for my $finder (@{ $self->sub_meta_finders}) {
+  for my $finder (@{ $self->sub_meta_finders }) {
     my $meta = $finder->($method);
-    return $meta if defined $sub_meta;
+    return $meta if defined $meta;
   }
   return undef;
 }
@@ -98,16 +103,21 @@ sub _build_constraint {
 
   my %method_metas = %{ $self->method_metas };
 
-  return sub {
+  sub {
     my $obj = shift;
     return !!0 unless blessed($obj);
 
     all {
       my $method_name = $_;
       my $method = $obj->can($method_name);
-      defined $method
-        ? $self->find_sub_meta($method)->is_same_interface($method_metas{$method_name})
-        : !!0;
+
+      if (defined $method) {
+        my $meta = $self->find_sub_meta($method);
+        defined $meta ? $meta->is_same_interface($method_metas{$method_name}) : !!0;
+      }
+      else {
+        !!0;
+      }
     } keys %method_metas;
   };
 }
