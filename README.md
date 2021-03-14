@@ -5,7 +5,25 @@ Types::HasTypedMethods - It's new $module
 
 # SYNOPSIS
 
-    use Types::HasTypedMethods;
+    use Types::HasTypedMethods -types;
+    
+    my $type = HasTypedMethods[
+      add          => [ [Int, Int] => Int ],
+      do_something => +{
+        params => [Int, Int],
+        isa    => Int,
+      },
+    ];
+
+    package HasMethodsClass {
+      use Types::Standard -types;
+      use Sub::WrapInType qw( install_method );
+      sub new { bless +{}, shift }
+      install_method add => [Int, Int] => Int, sub { $_[0] + $_[1] };
+      install_method do_something => [Int, Int] => Int, sub { $_[0] - $_[1] };
+    }
+
+    $type->check(HasMethodsClass->new);
 
 # DESCRIPTION
 
@@ -20,4 +38,4 @@ it under the same terms as Perl itself.
 
 # AUTHOR
 
-ybrliiu <raian@reeshome.org>
+mpoliiu <raian@reeshome.org>

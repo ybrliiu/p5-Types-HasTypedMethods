@@ -1,7 +1,7 @@
 {
    "abstract" : "It's new $module",
    "author" : [
-      "ybrliiu <raian@reeshome.org>"
+      "mpoliiu <raian@reeshome.org>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v3.1.10, CPAN::Meta::Converter version 2.150010",
@@ -42,11 +42,19 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "List::Util" : "0",
+            "Scalar::Util" : "0",
+            "Sub::Meta" : "0.07",
+            "Sub::WrapInType" : "0.07",
+            "Type::Tiny" : "1.010004",
+            "Types::TypedCodeRef" : "0.07",
+            "namespace::autoclean" : "0.29",
+            "perl" : "5.010001"
          }
       },
       "test" : {
          "requires" : {
+            "Test2::Suite" : "0.000138",
             "Test::More" : "0.98"
          }
       }
