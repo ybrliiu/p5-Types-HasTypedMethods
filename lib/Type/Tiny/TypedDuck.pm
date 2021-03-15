@@ -104,6 +104,18 @@ push @Type::Tiny::CMP, sub {
   my ($A, $B) = map { $_->find_constraining_type } @_;
   return Type::Tiny::CMP_UNKNOWN unless $A->isa(__PACKAGE__) && $B->isa(__PACKAGE__);
 
+  my $intersection = grep {
+    exists $B->method_metas->{$_}
+      ? $A->method_metas->{$_}->is_same_interface($B->method_metas->{$_} )
+      : !!0;
+  } keys %{ $A->method_metas };
+
+  my ($a_size, $b_size) = (scalar keys %{ $A->method_metas }, scalar keys %{ $B->method_metas });
+  return Type::Tiny::CMP_EQUIVALENT if $a_size == $b_size && $b_size == $intersection;
+  return Type::Tiny::CMP_SUPERTYPE  if $a_size == $intersection;
+  return Type::Tiny::CMP_SUBTYPE    if $b_size == $intersection;
+
+  Type::Tiny::CMP_UNKNOWN;
 };
 
 1;
