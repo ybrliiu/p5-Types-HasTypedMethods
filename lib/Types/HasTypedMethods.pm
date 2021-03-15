@@ -42,7 +42,7 @@ $meta->add_type(+{
         my $method_type = $method_types{$_};
         my @method_type_names =
           map { $_ . ' => ' . _method_type_to_name($method_types{$_}) } sort keys %method_types;
-        '{' . join(',', @method_type_names) . '}';
+        'HasTypedMethods[' . join(',', @method_type_names) . ']';
       },
     );
   },

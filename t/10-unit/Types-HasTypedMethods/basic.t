@@ -61,7 +61,7 @@ my $type = HasTypedMethods[
     isa    => Int,
   },
 ];
-is $type, '{add => [[Int,Int] => Int],do_something => {params => [Int,Int], isa => Int}}';
+is $type, 'HasTypedMethods[add => [[Int,Int] => Int],do_something => {params => [Int,Int], isa => Int}]';
 
 ok !$type->check(NoMethodsClass->new);
 ok !$type->check(HasNotTypedMethodsClass->new);
