@@ -40,19 +40,6 @@ DISTRIBUTIONS
       perl 5.008
       strict 0
       vars 0
-  Class-Method-Modifiers-2.13
-    pathname: E/ET/ETHER/Class-Method-Modifiers-2.13.tar.gz
-    provides:
-      Class::Method::Modifiers 2.13
-    requirements:
-      B 0
-      Carp 0
-      Exporter 0
-      ExtUtils::MakeMaker 0
-      base 0
-      perl 5.006
-      strict 0
-      warnings 0
   Dist-CheckConflicts-0.11
     pathname: D/DO/DOY/Dist-CheckConflicts-0.11.tar.gz
     provides:
@@ -227,34 +214,6 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
-  Moo-2.004004
-    pathname: H/HA/HAARG/Moo-2.004004.tar.gz
-    provides:
-      Method::Generate::Accessor undef
-      Method::Generate::BuildAll undef
-      Method::Generate::Constructor undef
-      Method::Generate::DemolishAll undef
-      Moo 2.004004
-      Moo::HandleMoose undef
-      Moo::HandleMoose::FakeConstructor undef
-      Moo::HandleMoose::FakeMetaClass undef
-      Moo::HandleMoose::_TypeMap undef
-      Moo::Object undef
-      Moo::Role 2.004004
-      Moo::_Utils undef
-      Moo::_mro undef
-      Moo::_strictures undef
-      Moo::sification undef
-      oo undef
-    requirements:
-      Class::Method::Modifiers 1.10
-      Exporter 5.57
-      ExtUtils::MakeMaker 0
-      Role::Tiny 2.001004
-      Scalar::Util 1.00
-      Sub::Defer 2.006006
-      Sub::Quote 2.006006
-      perl 5.006
   Package-Stash-0.39
     pathname: E/ET/ETHER/Package-Stash-0.39.tar.gz
     provides:
@@ -285,14 +244,6 @@ DISTRIBUTIONS
       perl 5.008001
       strict 0
       warnings 0
-  Role-Tiny-2.001004
-    pathname: H/HA/HAARG/Role-Tiny-2.001004.tar.gz
-    provides:
-      Role::Tiny 2.001004
-      Role::Tiny::With 2.001004
-    requirements:
-      Exporter 5.57
-      perl 5.006
   Scope-Guard-0.21
     pathname: C/CH/CHOCOLATE/Scope-Guard-0.21.tar.gz
     provides:
@@ -324,14 +275,17 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       Importer 0.024
       perl 5.008001
-  Sub-Meta-0.07
-    pathname: K/KF/KFLY/Sub-Meta-0.07.tar.gz
+  Sub-Meta-0.08
+    pathname: K/KF/KFLY/Sub-Meta-0.08.tar.gz
     provides:
-      Sub::Meta 0.07
-      Sub::Meta::Library 0.07
-      Sub::Meta::Param 0.07
-      Sub::Meta::Parameters 0.07
-      Sub::Meta::Returns 0.07
+      Sub::Meta 0.08
+      Sub::Meta::Creator 0.08
+      Sub::Meta::Finder::FunctionParameters undef
+      Sub::Meta::Finder::SubWrapInType undef
+      Sub::Meta::Library 0.08
+      Sub::Meta::Param 0.08
+      Sub::Meta::Parameters 0.08
+      Sub::Meta::Returns 0.08
     requirements:
       Carp 0
       Module::Build::Tiny 0.035
@@ -339,15 +293,6 @@ DISTRIBUTIONS
       Sub::Identify 0.14
       Sub::Util 1.50
       perl 5.010
-  Sub-Quote-2.006006
-    pathname: H/HA/HAARG/Sub-Quote-2.006006.tar.gz
-    provides:
-      Sub::Defer 2.006006
-      Sub::Quote 2.006006
-    requirements:
-      ExtUtils::MakeMaker 0
-      Scalar::Util 0
-      perl 5.006
   Sub-WrapInType-0.07
     pathname: M/MP/MPOLIIU/Sub-WrapInType-0.07.tar.gz
     provides:
@@ -657,21 +602,6 @@ DISTRIBUTIONS
       Exporter::Tiny 1.000000
       ExtUtils::MakeMaker 6.17
       perl 5.006001
-  Types-TypedCodeRef-0.07
-    pathname: M/MP/MPOLIIU/Types-TypedCodeRef-0.07.tar.gz
-    provides:
-      Types::TypedCodeRef 0.07
-      Types::TypedCodeRef::Factory undef
-    requirements:
-      Carp 0
-      Module::Build::Tiny 0.035
-      Moo 2.004004
-      Scalar::Util 0
-      Sub::Meta 0.05
-      Sub::WrapInType 0.05
-      Type::Tiny 1.010004
-      namespace::autoclean 0.29
-      perl 5.010001
   Variable-Magic-0.62
     pathname: V/VP/VPIT/Variable-Magic-0.62.tar.gz
     provides:
