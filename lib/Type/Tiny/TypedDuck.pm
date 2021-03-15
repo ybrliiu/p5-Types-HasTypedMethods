@@ -10,6 +10,7 @@ use Sub::Meta::Creator;
 use Sub::Meta::Finder::SubWrapInType;
 use List::Util qw( all );
 use Scalar::Util qw( blessed );
+use Type::Utils ();
 use Types::Standard -types;
 use namespace::autoclean;
 
@@ -22,6 +23,10 @@ my $TypeConstraint = HasMethods[qw( check get_message )];
 my $ParamsTypes    = $TypeConstraint | ArrayRef[$TypeConstraint] | HashRef[$TypeConstraint];
 my $ReturnTypes    = $TypeConstraint | ArrayRef[$TypeConstraint];
 my $TypedMethods   = Tuple[$ParamsTypes, $ReturnTypes] | Dict[ params => $ParamsTypes, isa => $ReturnTypes ];
+
+my $meta_creator = Sub::Meta::Creator->new(
+  finders => [ \&Sub::Meta::Finder::SubWrapInType::find_materials ]
+);
 
 sub new {
   my $class = shift;
@@ -77,9 +82,6 @@ sub _build_constraint {
       my $method_name = $_;
       my $method = $obj->can($method_name);
       if (defined $method) {
-        state $meta_creator = Sub::Meta::Creator->new(
-          finders => [ \&Sub::Meta::Finder::SubWrapInType::find_materials ]
-        );
         my $meta = $meta_creator->create($method);
         if (defined $meta) {
           # Not needed for comparison
@@ -98,6 +100,29 @@ sub _build_constraint {
 }
 
 sub validate_explain {
+  my ($self, $value) = @_;
+
+  return undef if $self->check($value);
+  return ['Not a blessed reference'] unless blessed($value);
+
+  my $missing_methods_error = sprintf(
+    '"%s" requires that the reference can %s',
+    $self,
+    Type::Utils::english_list(map qq{"$_"}, @{ $self->methods }),
+  );
+  my @missing_methods_errors =
+    map { qq{The reference cannot "$_"} }
+    grep { !$value->can($_) }
+    keys @{ $self->method_metas };
+
+  my @wrong_method_metas =
+    map { $_->[0] }
+    grep { $_->[0]->is_same_interface($_->[1]) }
+    grep defined $_->[1], map { [ $_->[0], $meta_creator->create($_->[1]) ] }
+    grep defined $_->[1], map { [ $self->method_metas->{$_}, $value->can($_) ] }
+    keys @{ $self->method_metas };
+
+  #TODO: TypedMethods[] とか のエラーメッセージを再利用したいかも
 }
 
 push @Type::Tiny::CMP, sub {
